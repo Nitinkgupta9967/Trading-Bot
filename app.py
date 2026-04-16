@@ -18,6 +18,8 @@ import ta
 load_dotenv()
 
 app = Flask(__name__)
+# START BOT WHEN APP LOADS (IMPORTANT FOR GUNICORN)
+
 
 # ===== SHARED STATE (thread-safe via lock) =====
 lock = threading.Lock()
@@ -238,7 +240,7 @@ def bot_loop():
             with lock:
                 STATE["status"] = f"Error: {e} — retrying..."
             time.sleep(30)
-
+threading.Thread(target=bot_loop, daemon=True).start()
 # ===== DASHBOARD HTML =====
 DASHBOARD = """
 <!DOCTYPE html>
